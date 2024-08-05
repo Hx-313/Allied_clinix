@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+
+    <style name="elevated_text_field">
+        <item name="android:background">@drawable/text_field_stroke</item>
+        <item name="android:padding">18dp</item>
+        <item name="android:layout_marginHorizontal">15dp</item>
+        <item name="android:layout_marginVertical">10dp</item>
+        <item name="android:drawablePadding">10dp</item>
+        <item name="android:inputType">textCapSentences</item>
+
+
+    </style>
+    <style name="CircleImageView" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
+</resources>

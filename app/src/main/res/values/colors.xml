@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="grey">#5D5E5F</color>
+    <color name="blue">#407CE2</color>
+    <color name="colorPrimary">#6200EE</color>
+    <color name="colorPrimaryDark">#3700B3</color>
+    <color name="colorSelected">#6200EE</color> <!-- Color for selected items -->
+    <color name="colorUnselected">#8E8E8E</color> <!-- Color for unselected items -->
+    <color name="ferozi">#d5ecf4</color>
+    <color name="bottom_nav_item_color">#FF000000</color>
+</resources>
