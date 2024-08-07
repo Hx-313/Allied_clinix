@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "429875979546",
+    "project_id": "clinic-d02ed",
+    "storage_bucket": "clinic-d02ed.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:429875979546:android:a61182fbc0d628a84578a3",
+        "android_client_info": {
+          "package_name": "com.example.clininallied"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA1z8q3oOZ-MZwhzQA8cV1S1oVE4Iqi5Co"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

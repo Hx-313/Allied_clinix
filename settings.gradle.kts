@@ -19,5 +19,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Clinin Allied"
+rootProject.name = "RelativeLayout"
 include(":app")
+ 

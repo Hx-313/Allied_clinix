@@ -10,4 +10,6 @@
     <color name="colorUnselected">#8E8E8E</color> <!-- Color for unselected items -->
     <color name="ferozi">#d5ecf4</color>
     <color name="bottom_nav_item_color">#FF000000</color>
+    <color name="text_grey">#696969</color>
+    <color name="card_back">#DBF0FA</color>
 </resources>
