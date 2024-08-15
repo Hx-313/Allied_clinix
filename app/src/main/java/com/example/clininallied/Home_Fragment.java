@@ -9,6 +9,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+
+import com.example.clininallied.databinding.FragmentHomeBinding;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +21,8 @@ public class Home_Fragment extends Fragment {
     RecyclerView Container;
     List<Doctors> doctorsData;
     DoctorsAdapter adapter;
+
+    TextView username;
 
     public Home_Fragment() {
         // Required empty public constructor
@@ -39,6 +44,8 @@ public class Home_Fragment extends Fragment {
         doctorsData.add(doctor2);
         Container.setLayoutManager(new LinearLayoutManager(getContext()));
         Container.setAdapter(adapter);
+        username = view.findViewById(R.id.username);
+        username.setText( UserData.getUsername());
         return view;
     }
 }
