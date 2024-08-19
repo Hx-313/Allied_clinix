@@ -75,6 +75,12 @@ public class ScreenLogin extends AppCompatActivity {
                 }
             }
         });
+        binding.forget.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(ScreenLogin.this,ForgotPassword.class));
+            }
+        });
 
         binding.signin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,7 +90,12 @@ public class ScreenLogin extends AppCompatActivity {
                  if(email.isEmpty() || passswrd.isEmpty()){
                      binding.email.setError("Please enter Email");
                      binding.password.setError("Please enter Password");
-                 }else{
+                     return;
+                 }
+                if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()){
+                    binding.email.setError("Enter Valid Email");
+                    return;
+                }
                      auth = FirebaseAuth.getInstance();
                      auth.signInWithEmailAndPassword(email,passswrd).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                          @Override
@@ -119,7 +130,7 @@ public class ScreenLogin extends AppCompatActivity {
                            }
                          }
                      });
-                 }
+
             }
         });
 

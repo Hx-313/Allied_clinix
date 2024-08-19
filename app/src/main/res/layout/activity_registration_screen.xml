@@ -188,7 +188,7 @@
         android:layout_gravity="center"
         android:layout_margin="30dp"
         android:backgroundTint="@color/blue"
-        android:id="@+id/progress_circular"
+        android:id="@+id/progresscircular"
         android:visibility="gone"/>
 
     <RelativeLayout

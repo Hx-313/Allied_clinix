@@ -20,15 +20,17 @@
             android:src="@drawable/banner_image"
             android:layout_marginRight="30dp"
             />
+
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/avatar_image"
             android:layout_width="70dp"
             android:layout_height="70dp"
-            android:src="@drawable/avatar"
             android:layout_marginTop="70dp"
             android:layout_marginStart="30sp"
             app:shapeAppearanceOverlay="@style/CircleImageView"
+            android:scaleType="fitXY"
             android:layout_gravity="center"/>
+
         <TextView
             android:id="@+id/welcome"
             android:layout_width="wrap_content"

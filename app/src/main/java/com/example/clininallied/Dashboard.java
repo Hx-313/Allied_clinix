@@ -22,6 +22,7 @@ import java.util.Objects;
 
 public class Dashboard extends AppCompatActivity {
     BottomNavigationView bnview;
+    MenuItem item;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

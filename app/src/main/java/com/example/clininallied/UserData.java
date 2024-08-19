@@ -6,6 +6,24 @@ public class UserData {
      static String email;
      static String passsword;
     static String Username;
+    static String Avatar = null;
+    static int drawableAvatar = R.drawable.defaualt_profile;
+
+    public static int getDrawableAvatar() {
+        return drawableAvatar;
+    }
+
+    public static void setDrawableAvatar(int drawableAvatar) {
+        UserData.drawableAvatar = drawableAvatar;
+    }
+
+    public static String getAvatar() {
+        return Avatar;
+    }
+
+    public static void setAvatar(String avatar) {
+        Avatar = avatar;
+    }
 
     public UserData() {
     }

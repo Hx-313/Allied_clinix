@@ -82,11 +82,18 @@ public class RegistrationScreen extends AppCompatActivity {
                     binding.password.setError("Please enter Password");
                     return;
                 }
+                if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()){
+                    binding.email.setError("Enter Valid Email");
+                    return;
+                }
                 if(!binding.agree.isChecked()){
                     binding.agreement.setError("Please agree to the terms and conditions");
                     return;
                 }
-                binding.agreement.setVisibility(View.VISIBLE);
+                binding.back.setOnClickListener(view -> {
+                    finish();
+                });
+                binding.progresscircular.setVisibility(View.VISIBLE);
 
                 auth.createUserWithEmailAndPassword( email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override

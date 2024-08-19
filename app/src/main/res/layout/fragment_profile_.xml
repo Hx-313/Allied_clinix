@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/ferozi"
+    android:background="@color/white"
     tools:context=".Profile_Fragment">
 
     <!-- TODO: Update blank fragment layout -->
@@ -15,11 +15,11 @@
             android:id="@+id/avatar_image"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:src="@drawable/avatar"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="70dp"
             android:layout_marginStart="30sp"
             app:shapeAppearanceOverlay="@style/CircleImageView"
+            android:scaleType="fitXY"
             android:layout_gravity="center"/>
         <TextView
             android:id="@+id/usernameHolder"
@@ -41,18 +41,63 @@
             android:textColor="@color/black"
             android:layout_below="@id/usernameHolder"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
+
 
             />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1.5dp"
+            android:layout_below="@id/emailHolder"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginVertical="20sp"
+            android:id="@+id/line"
+            android:background="@drawable/line_breaker"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_below="@id/line"
+
+            >
+            <TextView
+                android:id="@+id/update"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Edit Profile"
+                android:drawableStart="@drawable/baseline_edit_calendar_24"
+                android:drawablePadding="10sp"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="10dp"
+                android:textSize="16sp"
+                android:textFontWeight="@integer/material_motion_duration_medium_2"
+                android:textColor="@color/black"/>
+
+            <TextView
+                android:id="@+id/retrieve"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="see user data"
+                android:drawableStart="@drawable/baseline_remove_red_eye_24"
+                android:drawablePadding="10sp"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="10dp"
+                android:textSize="16sp"
+                android:textFontWeight="@integer/material_motion_duration_medium_2"
+                android:textColor="@color/black"/>
+
+        </LinearLayout>
+
+
     <Button
         android:id="@+id/logout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="@color/white"
         android:backgroundTint="@color/blue"
-        android:layout_marginVertical="40dp"
+        android:layout_marginBottom="40dp"
         android:layout_marginHorizontal="30dp"
-        android:text="Update"
+        android:text="Log out"
         android:padding="15dp"
         android:layout_alignParentBottom="true"
         android:textSize="20sp"/>

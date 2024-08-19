@@ -10,7 +10,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Update data"
+        android:text="Profile Image"
         android:gravity="center"
         android:textColor="@color/black"
         android:textSize="30sp"
@@ -32,27 +32,18 @@
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_marginTop="50dp"
-        android:layout_marginBottom="10dp"
         app:shapeAppearanceOverlay="@style/CircleImageView"
         android:scaleType="fitXY"
         android:layout_gravity="center"/>
-    <EditText
-        android:id="@+id/username"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        style="@style/elevated_text_field"
-        android:inputType="textPersonName"
-        android:hint="Enter new username"
-        android:drawableStart="@drawable/user_alt_1_svgrepo_com"
 
-        />
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_marginTop="40dp">
 
         <Button
-            android:id="@+id/Go"
+            android:id="@+id/view"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:textColor="@color/white"
@@ -60,12 +51,12 @@
             android:layout_marginVertical="10dp"
             android:layout_marginStart="30dp"
             android:layout_marginEnd="10dp"
-            android:text="Cancel"
+            android:text="View Image"
             android:padding="15dp"
             android:layout_above="@id/linear"
             android:textSize="20sp"/>
         <Button
-            android:id="@+id/update"
+            android:id="@+id/upload"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:textColor="@color/white"
@@ -73,7 +64,7 @@
             android:layout_marginVertical="10dp"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="30dp"
-            android:text="Update"
+            android:text="Upload "
             android:padding="15dp"
             android:layout_above="@id/linear"
             android:textSize="20sp"/>
