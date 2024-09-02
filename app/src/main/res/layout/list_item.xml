@@ -16,6 +16,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:background="@android:color/transparent"
+
             >
 
             <ImageView
@@ -24,7 +25,8 @@
                 android:layout_height="150dp"
                 android:layout_margin="10dp"
                 android:background="@drawable/image_back"
-                android:padding="2dp"
+                android:padding="8dp"
+                android:scaleType="fitXY"
                  />
 
             <LinearLayout
@@ -97,7 +99,6 @@
                         android:id="@+id/patients"
                         android:layout_width="65dp"
                         android:layout_height="wrap_content"
-
                         android:textSize="16sp"/>
                     <TextView
                         android:id="@+id/experience"

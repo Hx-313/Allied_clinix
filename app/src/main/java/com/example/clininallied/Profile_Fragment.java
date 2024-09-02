@@ -1,10 +1,9 @@
 package com.example.clininallied;
 
-import static android.app.Activity.RESULT_OK;
-
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
+import android.database.sqlite.SQLiteException;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -13,11 +12,8 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import android.os.Handler;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,22 +25,25 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.example.clininallied.SQLite.SQLiteHelperClass;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 
-import java.util.Objects;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class Profile_Fragment extends Fragment {
@@ -59,10 +58,14 @@ public class Profile_Fragment extends Fragment {
     FirebaseDatabase db;
     DatabaseReference reference;
     ShapeableImageView avatar;
+    TextView addDoc;
     Uri uri;
+    SQLiteHelperClass helperClass;
+    Doctors doctor = new Doctors();
     public Profile_Fragment() {
         // Required empty public constructor
     }
+
 
 
     @Override
@@ -91,6 +94,14 @@ public class Profile_Fragment extends Fragment {
                 showRetrieveDialog();
             }
         });
+        addDoc = view.findViewById(R.id.addDoc);
+        addDoc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addDoctor();
+            }
+        });
+
 
        btn_profile.setOnClickListener(new View.OnClickListener() {
            @Override
@@ -124,6 +135,121 @@ public class Profile_Fragment extends Fragment {
         return view;
     }
 
+    private void addDoctor() {
+        dialog.setContentView(R.layout.add_doctor);
+        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        dialog.setCancelable(true);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+
+        ImageView imageView = dialog.findViewById(R.id.avatar_image);
+        if (UserData.getAvatar() == null) {
+            imageView.setImageResource(UserData.getDrawableAvatar());
+        } else {
+            Glide.with(this).load(UserData.getAvatar()).into(imageView);
+        }
+
+        EditText name = dialog.findViewById(R.id.Name);
+        EditText speciality = dialog.findViewById(R.id.speciality);
+        EditText college = dialog.findViewById(R.id.college);
+        EditText patients = dialog.findViewById(R.id.patients);
+        EditText rating = dialog.findViewById(R.id.rating);
+        EditText xperience = dialog.findViewById(R.id.experience);
+        Button addDoc = dialog.findViewById(R.id.add);
+        Button cancel = dialog.findViewById(R.id.Go);
+        ShapeableImageView avatarImage = dialog.findViewById(R.id.avatar_image);
+        TextView upload = dialog.findViewById(R.id.uploadImage);
+        View.OnClickListener commonClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent photoPicker = new Intent(Intent.ACTION_PICK);
+                photoPicker.setType("image/*");
+                imagePickerLauncher.launch(photoPicker);
+                if (doctor.getImage() == null) {
+                    Toast.makeText(requireContext(), "Please select an image", Toast.LENGTH_SHORT).show();
+                } else {
+                    avatarImage.setImageURI(Uri.parse(doctor.getImage()));
+                }
+            }
+        };
+        avatarImage.setOnClickListener(commonClickListener);
+        upload.setOnClickListener(commonClickListener);
+        cancel.setOnClickListener(v -> dialog.dismiss());
+
+        addDoc.setOnClickListener(v -> {
+            String Name = name.getText().toString();
+            String Speciality = speciality.getText().toString();
+            String College = college.getText().toString();
+            String Patients = patients.getText().toString();
+            String Rating = rating.getText().toString();
+            String Experience = xperience.getText().toString();
+
+            if (Name.isEmpty() || Speciality.isEmpty() || College.isEmpty()
+                    || Patients.isEmpty() || Rating.isEmpty() || Experience.isEmpty()) {
+                Toast.makeText(requireContext(), "Please fill all the fields", Toast.LENGTH_SHORT).show();
+            }else if(doctor.getImage() ==null){
+                Toast.makeText(requireContext(), "Please select an image", Toast.LENGTH_SHORT).show();
+
+            }
+            else {
+
+                Map<String,Object> data = new HashMap<>();
+                data.put("docName",Name);
+                data.put("docSpeciality",Speciality);
+                data.put("docCollege",College);
+                data.put("docPatients",Patients);
+                data.put("docRating",Rating);
+                data.put("docExperience",Experience);
+
+                FirebaseFirestore db = FirebaseFirestore.getInstance() ;
+                db.collection("doctors").document(Name).set(data).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        UploadImage(Uri.parse(doctor.getImage()),"doctors", Name);
+                        Toast.makeText(requireContext(), "Doctor added successfully", Toast.LENGTH_SHORT).show();
+
+                        doctor.setName(Name);
+                        doctor.setSpeciality(Speciality);
+                        doctor.setCollege(College);
+                        doctor.setPatients(Patients);
+                        doctor.setExperience(Experience);
+                        doctor.setRatings(Rating);
+                        UserData.setDoctorData(doctor);
+                        try (SQLiteHelperClass helperClass = new SQLiteHelperClass(requireContext())) {
+                            helperClass.addNewDoctor(doctor);
+                            Toast.makeText(requireContext(), "Doctor added successfully", Toast.LENGTH_SHORT).show();
+                        } catch (SQLiteException e) {
+                            Toast.makeText(requireContext(), "Error adding doctor: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                        dialog.dismiss();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(requireContext(), "Error adding doctor: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                });
+
+
+            }
+        });
+
+        dialog.show();
+    }
+    ActivityResultLauncher<Intent> imagePickerLauncher= registerForActivityResult
+            (new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    if(result.getResultCode() == Activity.RESULT_OK){
+                        Intent data = result.getData();
+                        uri=data.getData();
+                        doctor.setImage(uri.toString());
+
+                    }else {
+                        Toast.makeText(getActivity(),"Image is not selected",Toast.LENGTH_LONG);
+                    }
+
+                }
+            });
 
     ActivityResultLauncher<Intent> activityResultLauncher= registerForActivityResult
             (new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
@@ -139,7 +265,8 @@ public class Profile_Fragment extends Fragment {
                             avatar.setImageResource(UserData.getDrawableAvatar());
                         }else{
                             avatar.setImageURI(Uri.parse(UserData.getAvatar()));
-                            UploadImage(uri);
+                            String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                            UploadImage(uri,"users",uid);
                         }
 
                     }else {
@@ -384,15 +511,15 @@ public class Profile_Fragment extends Fragment {
             }
         });
     }
-    private void UploadImage(Uri uri) {
-        String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        if (uid == null) {
+    private void UploadImage(Uri uri,String foldeName,String fileName) {
+
+        if (fileName == null) {
             Toast.makeText(requireContext(), "User not authenticated", Toast.LENGTH_SHORT).show();
             return;
         }
 
         StorageReference storageReference = FirebaseStorage.getInstance().getReference();
-        StorageReference fileReference = storageReference.child("users/" + uid);
+        StorageReference fileReference = storageReference.child(foldeName+"/" + fileName);
 
         fileReference.putFile(uri)
                 .addOnSuccessListener(taskSnapshot ->

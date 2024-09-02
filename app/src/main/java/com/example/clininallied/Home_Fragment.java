@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.example.clininallied.SQLite.SQLiteHelperClass;
 import com.example.clininallied.databinding.FragmentHomeBinding;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.imageview.ShapeableImageView;
@@ -30,9 +31,10 @@ import java.util.List;
 
 public class Home_Fragment extends Fragment {
     RecyclerView Container;
-    List<Doctors> doctorsData;
+
     DoctorsAdapter adapter;
     ShapeableImageView avatar;
+
 
 
     TextView username;
@@ -45,18 +47,14 @@ public class Home_Fragment extends Fragment {
                              Bundle savedInstanceState) {
         View view =inflater.inflate(R.layout.fragment_home_, container, false);
         Container = view.findViewById(R.id.RecyclerView);
-        doctorsData = new ArrayList<>();
-        Doctors doctor1 = new Doctors(R.drawable.banner_image, "Dr. Abdullah",
-                "Medical specialist","king Edward Medical College, MBBS",
-                "1000","4.5","4.4 Years");
-        doctorsData.add(doctor1);
-        Doctors doctor2 = new Doctors(R.drawable.doc_male, "Dr. Zeeshan",
-                "Medical specialist","king Edward Medical College, MBBS",
-                "2000","4.5","3 Years");
-        adapter = new DoctorsAdapter(doctorsData);
-        doctorsData.add(doctor2);
-        Container.setLayoutManager(new LinearLayoutManager(getContext()));
-        Container.setAdapter(adapter);
+        if (!UserData.getDoctorData().isEmpty()) {
+            adapter = new DoctorsAdapter(UserData.getDoctorData());
+            Container.setLayoutManager(new LinearLayoutManager(getContext()));
+            Container.setAdapter(adapter);
+
+        } else {
+            Log.e("Home_Fragment", "No doctor data available to display.");
+        }
         username = view.findViewById(R.id.username);
         username.setText( UserData.getUsername());
         avatar= view.findViewById(R.id.avatar_image);

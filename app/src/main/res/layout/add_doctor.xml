@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/dialog_back"
+    android:layout_marginHorizontal="15dp"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Add new Doctor"
+        android:gravity="center"
+        android:textColor="@color/black"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        android:layout_marginTop="10dp"
+        />
+
+
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/avatar_image"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginTop="10dp"
+        android:src="@drawable/baseline_file_upload_24"
+        android:layout_marginBottom="10dp"
+        app:shapeAppearanceOverlay="@style/CircleImageView"
+        android:scaleType="fitXY"
+        android:layout_gravity="center"/>
+    <TextView
+        android:id="@+id/uploadImage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="click to Upload Image"
+        android:gravity="center"
+        android:textColor="@color/black"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        android:layout_marginTop="10dp"
+        />
+
+    <EditText
+        android:id="@+id/Name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/elevated_text_field"
+        android:inputType="textPersonName"
+        android:hint="Enter new Doctor Name"
+        android:drawableStart="@drawable/user_alt_1_svgrepo_com"
+
+        />
+    <EditText
+        android:id="@+id/speciality"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/elevated_text_field"
+        android:inputType="textPersonName"
+        android:hint="Enter Doctor speciality"
+        android:drawableStart="@drawable/user_alt_1_svgrepo_com"
+
+        />
+    <EditText
+        android:id="@+id/college"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/elevated_text_field"
+        android:inputType="textPersonName"
+        android:hint="Enter College Name"
+        android:drawableStart="@drawable/user_alt_1_svgrepo_com"
+
+        />
+    <EditText
+        android:id="@+id/experience"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/elevated_text_field"
+        android:inputType="textPersonName"
+        android:hint="Enter Experience in years"
+        android:drawableStart="@drawable/user_alt_1_svgrepo_com"
+
+        />
+    <EditText
+        android:id="@+id/rating"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/elevated_text_field"
+        android:inputType="textPersonName"
+        android:hint="Enter Doctors rating"
+        android:drawableStart="@drawable/user_alt_1_svgrepo_com"
+
+        />
+    <EditText
+        android:id="@+id/patients"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/elevated_text_field"
+        android:inputType="textPersonName"
+        android:hint="Enter Patients attended"
+        android:drawableStart="@drawable/user_alt_1_svgrepo_com"
+
+        />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/Go"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:backgroundTint="@color/blue"
+            android:layout_marginVertical="10dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="10dp"
+            android:text="Cancel"
+            android:padding="15dp"
+            android:layout_above="@id/linear"
+            android:textSize="20sp"/>
+        <Button
+            android:id="@+id/add"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:backgroundTint="@color/blue"
+            android:layout_marginVertical="10dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="30dp"
+            android:text="Add Doc"
+            android:padding="15dp"
+            android:layout_above="@id/linear"
+            android:textSize="20sp"/>
+
+    </LinearLayout>
+
+</LinearLayout>

@@ -15,6 +15,7 @@ import androidx.fragment.app.FragmentKt;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.example.clininallied.SQLite.SQLiteHelperClass;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 
@@ -23,6 +24,7 @@ import java.util.Objects;
 public class Dashboard extends AppCompatActivity {
     BottomNavigationView bnview;
     MenuItem item;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,6 +35,7 @@ public class Dashboard extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()

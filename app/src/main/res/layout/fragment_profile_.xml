@@ -85,6 +85,19 @@
                 android:textSize="16sp"
                 android:textFontWeight="@integer/material_motion_duration_medium_2"
                 android:textColor="@color/black"/>
+            <TextView
+                android:id="@+id/addDoc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Add new Doctor"
+                android:drawableStart="@drawable/baseline_add_24"
+                android:drawableTint="@color/black"
+                android:drawablePadding="10sp"
+                android:layout_marginStart="30dp"
+                android:layout_marginTop="10dp"
+                android:textSize="16sp"
+                android:textFontWeight="@integer/material_motion_duration_medium_2"
+                android:textColor="@color/black"/>
 
         </LinearLayout>
 

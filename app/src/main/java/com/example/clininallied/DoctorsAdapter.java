@@ -1,5 +1,6 @@
 package com.example.clininallied;
 
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,7 +30,7 @@ public class DoctorsAdapter extends RecyclerView.Adapter<ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Doctors doctors = doctorsData.get(position);
-        holder.getImage().setImageResource(doctors.getImage());
+        holder.getImage().setImageURI(Uri.parse(doctors.getImage()));
         holder.getName().setText(doctors.getName());
         holder.getSpeciality().setText(doctors.getSpeciality());
         holder.getCollege().setText(doctors.getCollege());

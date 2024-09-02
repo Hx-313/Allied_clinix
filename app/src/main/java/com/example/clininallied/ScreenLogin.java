@@ -1,6 +1,7 @@
 package com.example.clininallied;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.View;
@@ -17,6 +18,8 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.example.clininallied.databinding.ActivityScreenLoginBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -25,6 +28,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 public class ScreenLogin extends AppCompatActivity {
     ActivityScreenLoginBinding binding;
@@ -102,6 +108,20 @@ public class ScreenLogin extends AppCompatActivity {
                          public void onComplete(@NonNull Task<AuthResult> task) {
                            if(task.isSuccessful()){
                                String userId = auth.getCurrentUser().getUid();
+                               StorageReference storageReference = FirebaseStorage.getInstance().getReference();
+                               StorageReference fileReference = storageReference.child( "users/" + userId);
+
+                               fileReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                   @Override
+                                   public void onSuccess(Uri uri) {
+                                       UserData.setAvatar(uri.toString());
+                                   }
+                               }).addOnFailureListener(new OnFailureListener() {
+                                   @Override
+                                   public void onFailure(@NonNull Exception e) {
+                                      Toast.makeText(ScreenLogin.this, "Log In failed: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                                   }
+                               });
                                db = FirebaseDatabase.getInstance();
                                reference = db.getReference("users");
                                reference.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -140,8 +160,29 @@ public class ScreenLogin extends AppCompatActivity {
                 Intent intent = new Intent(ScreenLogin.this, RegistrationScreen.class);
                 startActivity(intent);
 
+
             }
         });
 
     }
+    private void getImageProfile(String fileName, String directoryName, MainActivity.OnImageFetchedListener listener) {
+        StorageReference storageReference = FirebaseStorage.getInstance().getReference();
+        StorageReference fileReference = storageReference.child(directoryName + "/" + fileName);
+
+        fileReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                listener.onImageFetched(uri.toString());
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                listener.onImageFetched(null); // Handle failure scenario
+            }
+        });
+    }
+    public interface OnImageFetchedListener {
+        void onImageFetched(String imageUrl);
+    }
+
 }
