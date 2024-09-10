@@ -145,79 +145,35 @@ public class MainActivity extends AppCompatActivity {
                     String docExperience = snapshot.getString("docExperience");
                     String docRating = snapshot.getString("docRating");
 
-                    fetchDoctorImage(docName, imageUrl -> {
-                        Doctors doctor = new Doctors(
-                                imageUrl,
-                                docName != null ? docName : "",
-                                docSpec != null ? docSpec : "",
-                                docCollege != null ? docCollege : "",
-                                docPatients != null ? docPatients : "",
-                                docExperience != null ? docExperience : "",
-                                docRating != null ? docRating : ""
-                        );
-                        Log.d(TAG, "Doctor: " + doctor);
-                        UserData.setDoctorData(doctor);
+                    StorageReference reference = FirebaseStorage.getInstance().getReference();
+                    reference.child("doctors/" + docName).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            Log.d("DoctorImageFetcher", "Image URL: " + uri.toString());
+                            Doctors doctor = new Doctors(uri.toString(), docName, docSpec, docCollege, docPatients, docRating, docExperience);
+                            UserData.setDoctorData(doctor);
+                            listener.onFetchComplete();
 
-                        SQLiteHelperClass dbHelper = new SQLiteHelperClass(MainActivity.this);
-                        dbHelper.addNewDoctor(doctor);
 
-                        // Check if all doctors are processed
-                        if (isAllDoctorsFetched(queryDocumentSnapshots)) {
-                            if (listener != null) {
-                                listener.onFetchComplete();
-                            }
+
+
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+
                         }
                     });
+
                 }
-            } else {
-                Log.d(TAG, "No documents found in the collection.");
-                if (listener != null) {
-                    listener.onFetchComplete();
-                }
-            }
-        }).addOnFailureListener(e -> {
-            Log.e(TAG, "Error fetching documents: ", e);
-            Toast.makeText(getApplicationContext(), "Error fetching data: " + e.getMessage(), Toast.LENGTH_LONG).show();
-            if (listener != null) {
-                listener.onFetchComplete();
             }
         });
     }
 
-    /**
-     * Fetches the image URL for a doctor from Firebase Storage.
-     *
-     * @param doctorName The name of the doctor (used as file name).
-     * @param listener   A callback listener to handle the fetched URL.
-     */
-    private void fetchDoctorImage(String doctorName, OnImageFetchedListener listener) {
-        String normalizedDoctorName = doctorName.replace(" ", "%20"); // Replace spaces with URL encoded space
-        StorageReference fileReference = FirebaseStorage.getInstance().getReference().child("doctors/" + normalizedDoctorName);
 
-        fileReference.getDownloadUrl()
-                .addOnSuccessListener(uri -> listener.onImageFetched(uri.toString()))
-                .addOnFailureListener(e -> {
-                    Log.e(TAG, "Error fetching doctor image: " + e.getMessage());
-                    listener.onImageFetched(null); // Handle failure scenario
-                });
-    }
 
-    /**
-     * Determines if all doctor documents have been fetched.
-     *
-     * @param queryDocumentSnapshots QuerySnapshot containing all documents.
-     * @return true if all doctors have been fetched; false otherwise.
-     */
-    private boolean isAllDoctorsFetched(QuerySnapshot queryDocumentSnapshots) {
-        // Logic to determine if all doctors have been fetched
-        // This can be implemented using a counter or checking a list
-        // For now, let's assume that it returns true if all documents are processed
-        return true;
-    }
 
-    /**
-     * Navigates to the Dashboard screen.
-     */
+
     private void navigateToDashboard() {
         startActivity(new Intent(MainActivity.this, Dashboard.class));
         finish();

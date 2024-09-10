@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+
 import java.util.List;
 
 public class DoctorsAdapter extends RecyclerView.Adapter<ViewHolder> {
@@ -30,7 +32,9 @@ public class DoctorsAdapter extends RecyclerView.Adapter<ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Doctors doctors = doctorsData.get(position);
-        holder.getImage().setImageURI(Uri.parse(doctors.getImage()));
+        Glide.with(holder.itemView.getContext())
+                .load(doctors.getImage())
+                .into(holder.getImage());
         holder.getName().setText(doctors.getName());
         holder.getSpeciality().setText(doctors.getSpeciality());
         holder.getCollege().setText(doctors.getCollege());

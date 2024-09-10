@@ -16,6 +16,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.clininallied.SQLite.SQLiteHelperClass;
 import com.example.clininallied.databinding.ActivityScreenLoginBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -63,6 +64,11 @@ public class ScreenLogin extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        SQLiteHelperClass DB = new SQLiteHelperClass(ScreenLogin.this);
+        int count  = UserData.getDoctorData().size();
+        for (int i=0;i<count;i++){
+            DB.addNewDoctor(UserData.getDoctorData().get(i) , true) ;
+        }
 
 
         binding.password.setOnDrawableClickListener(new DrawableEditText.OnDrawableClickListener() {

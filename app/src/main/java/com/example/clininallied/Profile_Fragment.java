@@ -2,8 +2,10 @@ package com.example.clininallied;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteException;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -12,8 +14,11 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,6 +47,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -127,12 +135,35 @@ public class Profile_Fragment extends Fragment {
         avatar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showUploadDialog();
+                selectionDialog();
             }
         });
 
 
         return view;
+    }
+    private void selectionDialog(){
+        dialog.setContentView(R.layout.upload_options_dialog);
+        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        dialog.setCancelable(true);
+        dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        ImageView camera = dialog.findViewById(R.id.camera);
+        ImageView local = dialog.findViewById(R.id.uploadfromlocal);
+        camera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showImageCapture();
+                dialog.dismiss();
+            }
+        });
+        local.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showUploadDialog();
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
     }
 
     private void addDoctor() {
@@ -215,7 +246,7 @@ public class Profile_Fragment extends Fragment {
                         doctor.setRatings(Rating);
                         UserData.setDoctorData(doctor);
                         try (SQLiteHelperClass helperClass = new SQLiteHelperClass(requireContext())) {
-                            helperClass.addNewDoctor(doctor);
+                            helperClass.addNewDoctor(doctor , false);
                             Toast.makeText(requireContext(), "Doctor added successfully", Toast.LENGTH_SHORT).show();
                         } catch (SQLiteException e) {
                             Toast.makeText(requireContext(), "Error adding doctor: " + e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -250,7 +281,58 @@ public class Profile_Fragment extends Fragment {
 
                 }
             });
+    ActivityResultLauncher<Intent> cameraResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        Intent data = result.getData();
+                        if (data != null && data.getExtras() != null) {
+                            Bundle extras = data.getExtras();
+                            Bitmap imageBitmap = (Bitmap) extras.get("data");
+                            if (imageBitmap != null) {
+                                Uri uri = saveBitmapToUri(requireContext(), imageBitmap);
+                                if (uri != null) {
+                                    UserData.setAvatar(uri.toString());
+                                    if (UserData.getAvatar() == null) {
+                                        avatar.setImageResource(UserData.getDrawableAvatar());
+                                    } else {
+                                        Glide.with(requireContext())
+                                                .load(UserData.getAvatar())
+                                                .into(avatar);
+                                        String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                                        UploadImage(uri, "users", uid);
+                                    }
+                                } else {
+                                    Toast.makeText(getActivity(), "Failed to save image", Toast.LENGTH_SHORT).show();
+                                }
+                            } else {
+                                Toast.makeText(getActivity(), "No image data found", Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            Toast.makeText(getActivity(), "No data received from camera", Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        Toast.makeText(getActivity(), "Image capture failed", Toast.LENGTH_LONG).show();
+                    }
+                }
+            }
+    );
+    private Uri saveBitmapToUri(Context context, Bitmap bitmap) {
+        File imageFile = new File(context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), "captured_image.jpg");
 
+        try {
+            FileOutputStream fos = new FileOutputStream(imageFile);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fos); // Compress to JPEG format
+            fos.flush();
+            fos.close();
+
+            return FileProvider.getUriForFile(context, context.getPackageName() + ".provider", imageFile);
+        } catch (IOException e) {
+            Log.e("ImageSave", "Failed to save image to file", e);
+            return null;
+        }
+    }
     ActivityResultLauncher<Intent> activityResultLauncher= registerForActivityResult
             (new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
                 @Override
@@ -275,6 +357,12 @@ public class Profile_Fragment extends Fragment {
 
                 }
             });
+
+    private void showImageCapture() {
+        Intent iCamera = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        cameraResultLauncher.launch(iCamera);
+
+    }
 
     private void showUploadDialog() {
         dialog.setContentView(R.layout.upload_image_diaog);
